@@ -84,7 +84,7 @@ router.beforeEach((to, from, next) => {
       }
       next()
     }else{
-      Message.error("没有权限")
+      Message.error("没有权限,请登录")
       next({name:'login'})
     }
   }else{

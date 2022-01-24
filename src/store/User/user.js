@@ -18,6 +18,6 @@ export default {
       loginTime:"2021-1-15",
       loginLocation:"淮安"
     },
-    Authentication:'111111111'
+    Authentication:''
   }
 }

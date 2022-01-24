@@ -13,6 +13,7 @@
   "dependencies": {
     "axios": "^0.25.0",
     "element-ui": "^2.15.6",
+    "qs": "^6.10.3",
     "scss-loader": "^0.0.1",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",

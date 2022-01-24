@@ -5,7 +5,6 @@ import store from "../store/index"
 
 axios.defaults.headers.post["Content-Type"] = "application/json;";
 // axios请求头放入token
-axios.defaults.headers.common["Authentication"] = store.state.user.Authentication;
 
 // 如果本地有token，就放在vuex中
 if (localStorage.getItem("Authentication")){
@@ -23,7 +22,6 @@ class HttpRequest{
     const config = {
       baseUrl:this.baseUrL,
       header:{
-
       }
     }
     return config
@@ -31,6 +29,8 @@ class HttpRequest{
   interceptors(instance){
     // 添加请求拦截器
     instance.interceptors.request.use(function (config) {
+      // 请求头加入token
+      config.headers.Authentication = store.state.user.Authentication
       // 在发送请求之前做些什么
       console.log("拦截处理请求")
       return config;
@@ -54,7 +54,6 @@ class HttpRequest{
     // 请求
     const instance = axios.create()
     options = {...(this.getInsideConfig), ...options }
-    console.log("--------------------->"+this.baseUrL)
     this.interceptors(instance)
     return instance(options)
   }

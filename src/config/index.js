@@ -2,8 +2,8 @@ export default {
   title:'admin',
   baseUrl:{
     // 开发环境
-    dev:'http://localhost:9090',
+    dev:'http://localhost:9191',
     // 生产环境
-    pro:'http://localhost:9090/api'
+    pro:'http://localhost:9191'
   }
 }

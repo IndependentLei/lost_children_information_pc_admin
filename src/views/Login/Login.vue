@@ -26,7 +26,8 @@
 </template>
 <script>
 
-
+import {login} from '../../api/Login/login'
+import {mapState} from "vuex"
 export default {
   name:'login',
   data() {
@@ -47,25 +48,22 @@ export default {
       }
     }
   },
+  computed:{
+    ...mapState("user",['Authentication'])
+  },
   methods: {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
           // alert('submit!');
-
-          //TODO .... 登录账号请求
-
-          let auth = '1'
-          if (this.form.username === 'admin' && this.form.password === '123456'){
-            if (auth === ''){
-              this.openMessage("token为空,请联系管理员","error")
-            }else{
+          login(this.form.username,this.form.password).then((res)=>{
+            console.log(res.data)
+            localStorage.setItem("Authentication",res.data.Authentication)
+            this.$store.commit("user/set_token",res.data.Authentication)
+            if (this.Authentication !== ''){
               this.$router.push({name:'mainPage'})
             }
-          } else {
-            this.openMessage('账号或者密码错误','error')
-            return false;
-          }
+          })
         }
       })
     },

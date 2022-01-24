@@ -1,27 +1,33 @@
 <template>
   <div class="user">
     <el-form :inline="true" :model="formInline" class="demo-form-inline">
-      <el-form-item label="审批人">
-        <el-input v-model="formInline.user" placeholder="审批人"></el-input>
+      <el-form-item label="">
+        <el-input v-model="formInline.context" placeholder="内容"></el-input>
       </el-form-item>
-      <el-form-item label="活动区域">
-        <el-select v-model="formInline.region" placeholder="活动区域">
-          <el-option label="区域一" value="shanghai"></el-option>
-          <el-option label="区域二" value="beijing"></el-option>
+      <el-form-item label="">
+        <el-select v-model="formInline.state" placeholder="是否在轮播中" clearable>
+          <el-option label="轮播中" value="0"></el-option>
+          <el-option label="不在轮播中" value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
+    <el-row>
+      <el-button type="primary" plain>添加</el-button>
+      <el-button type="success" plain>批量删除</el-button>
+      <el-button type="info" plain>导入</el-button>
+      <el-button type="warning" plain>导出</el-button>
+    </el-row>
     <el-table
       ref="multipleTable"
       :data="tableData"
       :default-sort = "{prop: 'date'}"
       border
       tooltip-effect="dark"
-      style="width: 90%;"
-      @selection-change="handleSelectionChange">
+      style="width: 90%;margin-top: 10px"
+      @selection-change="handleSelectionChange" >
       <el-table-column
         type="selection"
         sortable
@@ -29,21 +35,26 @@
       </el-table-column>
       <el-table-column
         sortable
-        prop="date"
-        label="日期"
-        width="120">
-        <template slot-scope="scope">{{ scope.row.date }}</template>
-      </el-table-column>
-      <el-table-column
-        sortable
-        prop="name"
-        label="姓名"
+        prop="pic"
+        label="图片"
         width="120">
       </el-table-column>
       <el-table-column
         sortable
-        prop="address"
-        label="地址"
+        prop="createTime"
+        label="时间"
+        width="200">
+      </el-table-column>
+      <el-table-column
+        sortable
+        prop="context"
+        label="内容"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        sortable
+        prop="state"
+        label="状态"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column label="操作">
@@ -58,71 +69,58 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="page.currentPage"
+      :page-sizes="[5, 10, 15, 20]"
+      :page-size="page.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="page.total"
+      style="margin-top: 42px">
+    </el-pagination>
   </div>
 </template>
 
 <script>
+import {getSlideShowList} from "../../api/SlideShow/slideshow";
+
 export default {
   name: "slideshow",
   data() {
     return {
-      formInline: {
-        user: '',
-        region: ''
+      page:{
+        currentPage:1,
+        total:undefined,
+        size:5
       },
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        }, {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }, {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      formInline: {
+        context: '',
+        state: ''
+      },
+      tableData: []
     }
   },
   methods: {
+    handleCurrentChange(){
+
+    },
+    handleSizeChange(val){
+
+    },
     onSubmit() {
-      console.log('submit!');
+      let query = {
+        context:this.formInline.context,
+        state:this.formInline.state,
+        startPage:this.page.currentPage,
+        pageSize:this.page.size
+      }
+      getSlideShowList(query).then((res)=>{
+        this.page.size = res.data.data.size
+        this.page.total = res.data.data.total
+        this.tableData = res.data.data.list
+        console.log(res.data)
+      })
     },
     toggleSelection(rows) {
       if (rows) {
@@ -138,10 +136,21 @@ export default {
     }
   },
   mounted() {
-    // getUser().then((res)=>{
-    //   console.log(res.data)
-    //   this.tableData = res.data
-    // })
+    let query = {
+      context:this.formInline.context,
+      state:this.formInline.state,
+      startPage:this.page.currentPage,
+      pageSize:this.page.size
+    }
+    getSlideShowList(query).then((res)=>{
+      console.log(res.data)
+      this.tableData = res.data.data.list
+      console.log("---------------》"+this.tableData)
+      console.log("---------------》"+res.data.data.list)
+      this.page.currentPage = res.data.data.current
+      this.page.size = res.data.data.size
+      this.page.total = res.data.data.total
+    })
   }
 }
 </script>

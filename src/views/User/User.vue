@@ -139,10 +139,10 @@ export default {
     }
   },
   mounted() {
-    // getUser().then((res)=>{
-    //   console.log(res.data)
-    //   this.tableData = res.data
-    // })
+    getUser().then((res)=>{
+      console.log(res.data)
+      this.tableData = res.data
+    })
   }
 }
 </script>

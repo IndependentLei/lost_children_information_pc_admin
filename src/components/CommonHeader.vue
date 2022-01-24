@@ -117,12 +117,12 @@ export default {
     }
   },
   computed:{
-    ...mapState('user',['userInfo']),
+    ...mapState('user',['userInfo','Authentication']),
     ...mapState('tags',['menuLabel','isCollapse']),
   },
   methods:{
     ...mapMutations('tags',{isOpen:'ISOPEN'}),
-    // 退出登录，回到首页
+    // 回到首页
     backHome(){
       this.$router.push({name:'home'})
       let item={
@@ -160,9 +160,10 @@ export default {
      * 退出登录
      */
     logOut(){
-      this.$router.push({name:'login'})
       localStorage.removeItem("Authentication")
+      this.$store.commit("user/set_token","")
       this.openMessage('退出成功','success')
+      this.$router.push({name:'login'})
     },
 
     // 修改密码
