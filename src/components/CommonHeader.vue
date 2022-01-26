@@ -37,13 +37,13 @@
                class="demo-ruleForm">
 
         <el-form-item label="旧密码" prop="oldPassword">
-          <el-input type="password" v-model="form.oldPassword" autocomplete="off"></el-input>
+          <el-input type="password" v-model="form.oldPassword" ></el-input>
         </el-form-item>
         <el-form-item label="新密码" prop="newPassword">
-          <el-input type="password" v-model="form.newPassword" autocomplete="off"></el-input>
+          <el-input type="password" v-model="form.newPassword" ></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="checkPassword">
-          <el-input type="password" v-model="form.checkPassword" autocomplete="off"></el-input>
+          <el-input type="password" v-model="form.checkPassword" ></el-input>
         </el-form-item>
       </el-form>
 
@@ -58,6 +58,7 @@
 
 <script>
 import {mapState,mapMutations} from 'vuex'
+import {removeCookie} from "../utils/cookie";
 export default {
   name: "CommonHeader",
   data(){
@@ -101,13 +102,13 @@ export default {
       },
       rules: {
         oldPassword: [
-          {validator: validateNewPass, trigger:'blur'}
+          {required:true,validator: validateNewPass, trigger:'blur'}
         ],
         newPassword: [
-          {validator: validatePass, trigger: 'blur'}
+          {required:true,validator: validatePass, trigger: 'blur'}
         ],
         checkPassword: [
-          {validator: validatePass2, trigger: 'blur'}
+          {required:true,validator: validatePass2, trigger: 'blur'}
         ]
       },
 
@@ -160,8 +161,7 @@ export default {
      * 退出登录
      */
     logOut(){
-      localStorage.removeItem("Authentication")
-      this.$store.commit("user/set_token","")
+      removeCookie("Authentication")
       this.openMessage('退出成功','success')
       this.$router.push({name:'login'})
     },

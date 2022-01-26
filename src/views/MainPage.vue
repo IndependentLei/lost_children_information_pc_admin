@@ -6,13 +6,13 @@
 
     <el-container style="width: auto">
       <!-- header -->
-      <el-header style="background-color: black">
+      <el-header style="background-color: #049797">
         <CommonHeader ></CommonHeader>
       </el-header>
       <!--Tags-->
       <CommonTags/>
       <!-- body -->
-      <el-main>
+      <el-main style="padding-top: 0">
         <router-view/>
       </el-main>
     </el-container>
@@ -35,7 +35,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="css" scoped>
-.el-container{
-  ;
-}
 </style>

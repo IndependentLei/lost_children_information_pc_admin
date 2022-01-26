@@ -4,7 +4,7 @@
       <h2 class="login-title">管理系统</h2>
       <div style="text-align: center">
         <el-form-item label="账号" prop="username" style="margin-right: 40px">
-          <el-input v-model="form.username"></el-input>
+          <el-input type="text" autocomplete="off" v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password" style="margin-right: 40px">
           <el-input v-model="form.password " autocomplete="off" type="password"></el-input>
@@ -14,7 +14,9 @@
 
       <div class="button2">
         <el-form-item>
-          <el-button type="primary" @click="submitForm('form')">登录</el-button>
+          <el-button type="primary"
+                     @click="submitForm('form')"
+                     :loading="loading">登录</el-button>
         </el-form-item>
         <el-form-item>
           <el-button  @click="resetForm('form')">重置</el-button>
@@ -26,12 +28,14 @@
 </template>
 <script>
 
+import {setCookie} from "../../utils/cookie";
 import {login} from '../../api/Login/login'
-import {mapState} from "vuex"
+import {Message} from 'element-ui'
 export default {
   name:'login',
   data() {
     return {
+      loading:false,
       form: {
         username: '',
         password: ''
@@ -49,20 +53,25 @@ export default {
     }
   },
   computed:{
-    ...mapState("user",['Authentication'])
+
   },
   methods: {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
         if (valid) {
+          this.loading = true
           // alert('submit!');
           login(this.form.username,this.form.password).then((res)=>{
             console.log(res.data)
-            localStorage.setItem("Authentication",res.data.Authentication)
-            this.$store.commit("user/set_token",res.data.Authentication)
-            if (this.Authentication !== ''){
-              this.$router.push({name:'mainPage'})
-            }
+            if (res.data.code === 200){
+              setCookie("Authentication",res.data.Authentication,1)
+              this.$router.push({name:'home'})
+            }else {}
+
+          }).catch(e =>{
+            Message.error("账号或者密码错误")
+          }).finally(() =>{
+            this.loading = false
           })
         }
       })

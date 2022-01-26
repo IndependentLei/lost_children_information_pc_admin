@@ -6,9 +6,7 @@ export default {
 
   },
   mutations:{
-    set_token(state,value){
-      state.Authentication = value
-    }
+
   },
   state:{
     userInfo:{
@@ -18,6 +16,5 @@ export default {
       loginTime:"2021-1-15",
       loginLocation:"淮安"
     },
-    Authentication:''
   }
 }

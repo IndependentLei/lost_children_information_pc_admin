@@ -4,6 +4,7 @@ import MainPage from '../views/MainPage'
 import Login from "../views/Login/Login";
 import store from "../store/index"
 import {Message} from 'element-ui'
+import {getCookie} from "../utils/cookie";
 
 
 Vue.use(Router)
@@ -78,7 +79,7 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.meta.isAuth){ // 鉴权
     // console.log(store.state.user.Authentication)
-    if(store.state.user.Authentication!==''){
+    if(getCookie('Authentication')){
       if(to.name === 'login'){
         Message.success("登录成功")
       }
