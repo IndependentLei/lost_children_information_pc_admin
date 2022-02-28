@@ -2,8 +2,6 @@
 import axios from "axios";
 import config from '../config/index'
 import {getCookie} from "../utils/cookie";
-import {Message} from "element-ui";
-import el from "element-ui/src/locale/lang/el";
 
 axios.defaults.headers.post["Content-Type"] = "application/json;";
 axios.defaults.timeout=5000

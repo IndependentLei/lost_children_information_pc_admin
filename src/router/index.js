@@ -78,9 +78,10 @@ const router = new Router({
 // 路由前置守卫
 router.beforeEach((to, from, next) => {
   if (to.meta.isAuth){ // 鉴权
-    // console.log(store.state.user.Authentication)
+    console.log(to.name)
+    console.log(from.name)
     if(getCookie('Authentication')){
-      if(to.name === 'login'){
+      if(from.name === 'login'){
         Message.success("登录成功")
       }
       next()

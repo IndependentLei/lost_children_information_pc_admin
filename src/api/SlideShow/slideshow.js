@@ -76,3 +76,19 @@ export const importSlideShow = ()=>{
     method:'Post',
   })
 }
+
+/**
+ * 导出
+ * @param query
+ * @returns {AxiosPromise}
+ */
+export const exportSlideShow = ()=>{
+  return axios.request({
+    url: '/lostchildinfo/slideshow/export',
+    method:'Get',
+    header:{
+      'Content-Type':'application/json;charset=UTF-8'
+    },
+    responseType:'blob'
+  })
+}

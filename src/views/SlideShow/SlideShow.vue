@@ -27,13 +27,7 @@
         :on-error="importError">
         <el-button  type="info" plain>导入</el-button>
       </el-upload>
-      <el-upload
-        style="display: inline-block;"
-        class="upload-demo"
-        show-file-list
-        :action="actionUrl+'export'">
-        <el-button  type="warning" plain>导出</el-button>
-      </el-upload>
+      <el-button  type="warning" plain @click="exportSlideShow">导出</el-button>
     </el-row>
     <el-table
       :align="{'text-align':'center'}"
@@ -147,7 +141,7 @@
         </el-form-item>
 
         <el-form-item label="是否轮播" prop="state" >
-          <el-select v-model="form.state" clearable placeholder="是否轮播" style="margin-left: -92px">
+          <el-select v-model="form.state"  clearable placeholder="是否轮播" style="margin-left: -92px" >
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -168,7 +162,7 @@
 
 <script>
 import 'animate.css'
-import {addSlideShow, delSlideShow, getSlideShowList,getSlideShowById,exitSlideShow} from "../../api/SlideShow/slideshow";
+import {addSlideShow, delSlideShow, getSlideShowList,getSlideShowById,exitSlideShow,exportSlideShow} from "../../api/SlideShow/slideshow";
 import {Message} from "element-ui"
 import {getCookie} from "../../utils/cookie";
 
@@ -182,7 +176,8 @@ export default {
       callback()
     }
     var validateState = (rule, value, callback) => {
-      if (this.form.state === null){
+      console.log(value)
+      if (this.form.state === null || this.form.state ===''){
         callback(new Error("轮播图状态不能为空"))
       }
       callback()
@@ -192,9 +187,9 @@ export default {
       flag:undefined, //添加修改 标志位
       dialogFormVisible:false,
       form:{
-        pic:'',
-        context:'',
-        state:null,
+        pic:undefined,
+        context:undefined,
+        state:undefined,
       },
       rules:{
         pic:[
@@ -241,21 +236,38 @@ export default {
     }
   },
   methods: {
+    exportSlideShow(){
+      exportSlideShow().then(res=>{
+        console.log("------------->"+res)
+        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+        //IE10以上支持blob但是依然不支持download
+        if ('download' in document.createElement('a')) {
+          //支持a标签download的浏览器
+          const link = document.createElement('a') //创建a标签link.download = '标注数据.xls' //a标签添加属性
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blob)
+          document.body.appendChild(link)
+          link.click() //执行下载
+          URL.revokeObjectURL(link.href) //释放url
+          document.body.removeChild(link) //释放标签
+        }
+      }).catch(reason => {
+        Message.error(reason)
+      })
+    },
     importError(err, file, fileList){
       Message.error(err)
     },
     importSuccess(response, file, fileList){
-      console.log('进来了')
-      console.log(response)
       if (response.code === 200)
         Message.success(response.msg)
       else
         Message.error(response.msg)
     },
     cleanData(form){
-      this.form.state = null
-      this.form.pic = ''
-      this.form.context = ''
+      this.form.state = undefined
+      this.form.pic = undefined
+      this.form.context = undefined
       this.resetForm(form)
     },
 
@@ -318,15 +330,10 @@ export default {
       this.flag = 2
       getSlideShowById(row.id).then(res=>{
         this.dialogFormVisible = true
-        this.form.state = res.data.data.state === 0 ? "轮播":"不轮播"
+        this.form.state = res.data.data.state
         this.form.pic = res.data.data.pic
         this.form.context = res.data.data.context
-      }).catch(e=>{
-
-      }).finally(()=>{
-
       })
-
     },
 
     /**
@@ -376,13 +383,13 @@ export default {
             state:this.form.state
           }
           addSlideShow(query).then((res)=>{
-
             if(res.data.code === 200){
               this.dialogFormVisible = false
               Message.success(res.data.msg);
               this.pageUtil()
             }else
               Message.error(res.data.msg)
+          }).catch().finally(()=>{
           })
         } else {
           return false;
@@ -395,7 +402,6 @@ export default {
      * 修改信息
      */
     exitSlideShow(form){
-      console.log("------------------------------->",this.exitId)
       this.$refs[form].validate((valid) => {
         if (valid) {
           let query = {
@@ -404,6 +410,7 @@ export default {
             context: this.form.context,
             state: this.form.state
           }
+          console.log(query.state)
           exitSlideShow(query).then((res) => {
             if (res.data.code === 200) {
               this.dialogFormVisible = false
@@ -439,7 +446,6 @@ export default {
         this.page.size = res.data.data.size
         this.page.total = res.data.data.total
         this.tableData = res.data.data.list
-        console.log(this.tableData)
       })
     }
   },

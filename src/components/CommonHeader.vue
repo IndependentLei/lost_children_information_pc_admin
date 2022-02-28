@@ -59,6 +59,8 @@
 <script>
 import {mapState,mapMutations} from 'vuex'
 import {removeCookie} from "../utils/cookie";
+import {logout} from "../api/Login/logout";
+
 export default {
   name: "CommonHeader",
   data(){
@@ -161,9 +163,11 @@ export default {
      * 退出登录
      */
     logOut(){
-      removeCookie("Authentication")
-      this.openMessage('退出成功','success')
-      this.$router.push({name:'login'})
+      logout().then(res=>{
+        removeCookie("Authentication")
+        this.openMessage('退出成功','success')
+        this.$router.push({name:'login'})
+      })
     },
 
     // 修改密码
