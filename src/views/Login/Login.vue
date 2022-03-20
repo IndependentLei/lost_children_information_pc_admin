@@ -60,17 +60,17 @@ export default {
       this.$refs[form].validate((valid) => {
         if (valid) {
           this.loading = true
-          // alert('submit!');
           login(this.form.username,this.form.password).then((res)=>{
             console.log(res.data)
             if (res.data.code === 200){
               setCookie("Authentication",res.data.Authentication,1)
               this.$router.push({name:'home'})
-            }else {}
-
-          }).catch(e =>{
-            Message.error("账号或者密码错误")
-          }).finally(() =>{
+            }else {
+              Message.error(res.data.msg)
+            }
+          }).catch(res =>{
+            Message.error(res.data.msg)
+          }).finally(()=>{
             this.loading = false
           })
         }
@@ -103,7 +103,7 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
-  background: url(https://file.7b114.xyz/blog_avater/2022/01/18/1642517003480070.jpg);
+  background: url("https://file.7b114.xyz/blog_avater/2022/01/18/1642517003480070.jpg");
   background-size: cover;
 }
 

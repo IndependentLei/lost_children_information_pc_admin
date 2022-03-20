@@ -4,7 +4,7 @@ import config from '../config/index'
 import {getCookie} from "../utils/cookie";
 
 axios.defaults.headers.post["Content-Type"] = "application/json;";
-axios.defaults.timeout=5000
+axios.defaults.timeout=10000
 // axios请求头放入token
 
 // 设置配置，根据开发和生产环境一样

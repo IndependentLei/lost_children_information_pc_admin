@@ -30,6 +30,7 @@
       <el-button  type="warning" plain @click="exportSlideShow">导出</el-button>
     </el-row>
     <el-table
+      v-loading="loading"
       :align="{'text-align':'center'}"
       :cell-style="{'text-align':'center'}"
       :key="1"
@@ -139,12 +140,8 @@
 
         <el-form-item label="是否轮播" prop="state" >
           <el-select v-model="form.state"  clearable placeholder="是否轮播" style="margin-left: -92px" >
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
+            <el-option label="轮播" value="0"></el-option>
+            <el-option label="不轮播" value="1"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item size="large">
@@ -221,7 +218,8 @@ export default {
       multipleSelection:[],
       delIds:[],
       rowKey:324,
-      exitId:null
+      exitId:null,
+      loading:true
     }
   },
   computed:{
@@ -440,6 +438,7 @@ export default {
         pageSize:this.page.size
       }
       getSlideShowList(query).then((res)=>{
+        this.loading = false
         this.page.size = res.data.data.size
         this.page.total = res.data.data.total
         this.tableData = res.data.data.list
