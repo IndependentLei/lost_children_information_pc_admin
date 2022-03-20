@@ -43,13 +43,11 @@
       @selection-change="handleSelectionChange" >
       <el-table-column
         type="selection"
-        style="text-align: center"
         sortable
         width="55">
       </el-table-column>
       <el-table-column
         sortable
-        style="text-align: center"
         prop="pic"
         label="图片"
         show-overflow-tooltip>
@@ -61,7 +59,6 @@
       </el-table-column>
       <el-table-column
         sortable
-        style="text-align: center"
         prop="createTime"
         label="时间"
         show-overflow-tooltip>

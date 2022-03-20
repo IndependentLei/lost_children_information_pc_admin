@@ -2,9 +2,10 @@
 
 import axios from "../axios";
 
-export const getUser = ()=>{
+export const getUser = (query)=>{
   return axios.request({
-    url: 'user/user',
-    method:'Get'
+    url: '/lostchildinfo/user/list',
+    method:'post',
+    data:query
   })
 }
