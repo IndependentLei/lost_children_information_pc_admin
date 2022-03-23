@@ -60,6 +60,7 @@
 import {mapState,mapMutations} from 'vuex'
 import {removeCookie} from "../utils/cookie";
 import {logout} from "../api/Login/logout";
+import {changePwd} from "../api/User/user";
 
 export default {
   name: "CommonHeader",
@@ -120,7 +121,7 @@ export default {
     }
   },
   computed:{
-    ...mapState('user',['userInfo','Authentication']),
+    ...mapState('user',['userInfo']),
     ...mapState('tags',['menuLabel','isCollapse']),
   },
   methods:{
@@ -175,8 +176,24 @@ export default {
 
       this.$refs['form'].validate((valid) =>{
         if(valid){
-          //TODO .... 上传修改密码 ................
-          this.openMessage("修改成功",'success')
+          let query = {
+            oldPwd:this.form.oldPassword,
+            userPwd:this.form.newPassword
+          }
+          changePwd(query).then(res=>{
+            if(res.data.code === 200){
+              // 退出dialog，重置表单
+              this.exitChangePassword()
+              // 删除认证
+              removeCookie("Authentication")
+              // 推到login页面
+              this.$router.push({name:'login'})
+              this.openMessage("修改成功,请重新登录",'success')
+            }else{
+              this.openMessage("旧密码错误",'error')
+            }
+          })
+
         }else {
           return false
         }

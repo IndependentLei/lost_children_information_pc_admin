@@ -69,7 +69,62 @@ const router = new Router({
           meta:{
             isAuth: true
           }
+        },
+        // 日志组件
+        {
+          path:'/sys/log',
+          name:"log",
+          component: () => import('@/views/Sys/Log/Log'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 菜单组件
+        {
+          path:'/sys/menu',
+          name:"menu",
+          component: () => import('@/views/Sys/Menu/Menu'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 角色组件
+        {
+          path:'/sys/role',
+          name:"role",
+          component: () => import('@/views/Sys/Role/Role'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 儿童信息组件
+        {
+          path:'/children/info',
+          name:'childrenInfo',
+          component: () => import('@/views/Children/Children'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 儿童信息附件组件
+        {
+          path:'/children/attach',
+          name:'childrenAttach',
+          component: () => import('@/views/Children/ChildrenAttach'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 评论管理组件
+        {
+          path:'/comment',
+          name:'comment',
+          component: () => import('@/views/Comment/Comment'),
+          meta:{
+            isAuth: true
+          }
         }
+
       ]
     },
   ]

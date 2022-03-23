@@ -78,3 +78,18 @@ export const changePwd = (query)=>{
   })
 }
 
+/**
+ * 导入用户
+ * @returns {AxiosPromise}
+ */
+export const exportUser = ()=>{
+  return axios.request({
+    url: '/lostchildinfo/user/export',
+    method:'get',
+    header:{
+      'Content-Type':'application/json;charset=UTF-8'
+    },
+    responseType:'blob'
+  })
+}
+

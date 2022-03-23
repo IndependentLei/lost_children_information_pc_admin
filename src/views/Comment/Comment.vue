@@ -1,10 +1,10 @@
 <template>
-
+  <h2>评论管理</h2>
 </template>
 
 <script>
 export default {
-  name: "Children"
+  name: "Comment"
 }
 </script>
 

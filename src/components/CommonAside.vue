@@ -82,27 +82,68 @@ export default {
             icon:'user',
             url:'UserManage/UserManage'
           },
+
           {
             id:'4',
-            label:'其他',
-            icon:'location',
+            label:'儿童管理',
+            icon:'basketball',
             url:'location',
             children: [
               {
                 id:'5',
-                path:'/page1',
-                name:'page1',
-                label:'页面1',
-                icon:'setting',
-                url:'Other/PageOne'
+                path:'/children/info',
+                name:'childrenInfo',
+                label:'儿童信息管理',
+                icon:'info',
+                url:'Children/Children'
               },
               {
                 id:'6',
-                path:'/page2',
-                name:'page2',
-                label:'页面2',
-                icon:'setting',
-                url:'Other/PageTwo'
+                path:'/children/attach',
+                name:'childrenAttach',
+                label:'儿童附件管理',
+                icon:'sell',
+                url:'Children/ChildrenAttach'
+              },
+            ]
+          },
+          {
+            id: '7',
+            path:'/comment',
+            name:'comment',
+            label: '评论管理',
+            icon: 'chat-dot-round',
+            url: 'Comment/Comment'
+          },
+          {
+            id:'8',
+            label:'系统设置',
+            icon:'location',
+            url:'location',
+            children: [
+              {
+                id:'9',
+                path:'/sys/log',
+                name:'log',
+                label:'系统日志',
+                icon:'date',
+                url:'Sys/Log/Log'
+              },
+              {
+                id:'10',
+                path:'/sys/menu',
+                name:'menu',
+                label:'菜单详情',
+                icon:'menu',
+                url:'Sys/Menu/Menu'
+              },
+              {
+                id:'11',
+                path:'/sys/role',
+                name:'role',
+                label:'系统角色',
+                icon:'s-custom',
+                url:'Sys/Role/Role'
               }
             ]
           }

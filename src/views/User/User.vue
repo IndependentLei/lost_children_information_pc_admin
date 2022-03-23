@@ -31,8 +31,17 @@
     <el-row style="margin-bottom: 10px">
       <el-button type="primary" @click="dialog.dialogFormVisible = true;dialog.title = '添加用户';dialog.checked = true;dialog.checkRules = dialog.rules">添加</el-button>
       <el-button type="success" :disabled="!multipleSelection.length" @click="batchDel">批量删除</el-button>
-      <el-button type="info">导入</el-button>
-      <el-button type="warning">导出</el-button>
+      <el-upload
+        style="display: inline-block;padding: 0 10px 0 10px"
+        class="upload-demo"
+        :show-file-list="false"
+        :action="'http://localhost:9191/lostchildinfo/slideshow/import'"
+        :headers="{Authentication:Authentication}"
+        :on-success="importSuccess"
+        :on-error="importError">
+        <el-button  type="info" plain>导入</el-button>
+      </el-upload>
+      <el-button type="warning" @click="exportUserInfo">导出</el-button>
     </el-row>
     <el-table
       v-loading="loading"
@@ -177,8 +186,9 @@
 </template>
 
 <script>
-import {getUser,addUser,getUserById,exitUserInfo,delUserByIds,changePwd} from '../../api/User/user'
+import {getUser,addUser,getUserById,exitUserInfo,delUserByIds,changePwd,exportUser} from '../../api/User/user'
 import {Message} from "element-ui"
+import {getCookie} from "../../utils/cookie";
 export default {
   name: "user",
   data() {
@@ -264,7 +274,42 @@ export default {
       }
     }
   },
+  computed:{
+    /**
+     * 获取token
+     */
+    Authentication(){
+      return getCookie("Authentication")
+    }
+  },
   methods: {
+    importSuccess(response, file, fileList) {
+      if (response.code === 200)
+        Message.success(response.msg)
+      else
+        Message.error(response.msg)
+    },
+    importError(err, file, fileList) {
+      Message.error(err)
+    },
+    exportUserInfo(){
+      exportUser().then(res=> {
+        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+        //IE10以上支持blob但是依然不支持download
+        if ('download' in document.createElement('a')) {
+          //支持a标签download的浏览器
+          const link = document.createElement('a') //创建a标签link.download = '标注数据.xls' //a标签添加属性
+          link.style.display = 'none'
+          link.href = URL.createObjectURL(blob)
+          document.body.appendChild(link)
+          link.click() //执行下载
+          URL.revokeObjectURL(link.href) //释放url
+          document.body.removeChild(link) //释放标签
+        }
+      }).catch(reason => {
+        Message.error(reason)
+      })
+    },
     resetPwd(index,row){
       if (!confirm("确定重置该账号密码?")){
         return
@@ -308,15 +353,13 @@ export default {
       })
     },
     editUserInfo(index,row){
-      this.dialog.checkRules = this.dialog.rules1
-      this.dialog.checked = false
-      this.dialog.title = "编辑用户信息"
-
       getUserById(row.userId).then(res=>{
         this.dialog.form = res.data.data
+        this.dialog.checkRules = this.dialog.rules1
+        this.dialog.checked = false
+        this.dialog.title = "编辑用户信息"
+        this.dialog.dialogFormVisible = true
       })
-
-      this.dialog.dialogFormVisible = true
     },
     exitForm(formName) {
       this.$refs[formName].validate((valid) => {

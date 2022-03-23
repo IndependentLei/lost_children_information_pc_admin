@@ -232,23 +232,22 @@ export default {
   },
   methods: {
     exportSlideShow(){
-      exportSlideShow().then(res=>{
-        console.log("------------->"+res)
-        const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
-        //IE10以上支持blob但是依然不支持download
-        if ('download' in document.createElement('a')) {
-          //支持a标签download的浏览器
-          const link = document.createElement('a') //创建a标签link.download = '标注数据.xls' //a标签添加属性
-          link.style.display = 'none'
-          link.href = URL.createObjectURL(blob)
-          document.body.appendChild(link)
-          link.click() //执行下载
-          URL.revokeObjectURL(link.href) //释放url
-          document.body.removeChild(link) //释放标签
-        }
-      }).catch(reason => {
-        Message.error(reason)
-      })
+      exportSlideShow().then(res=> {
+          const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
+          //IE10以上支持blob但是依然不支持download
+          if ('download' in document.createElement('a')) {
+            //支持a标签download的浏览器
+            const link = document.createElement('a') //创建a标签link.download = '标注数据.xls' //a标签添加属性
+            link.style.display = 'none'
+            link.href = URL.createObjectURL(blob)
+            document.body.appendChild(link)
+            link.click() //执行下载
+            URL.revokeObjectURL(link.href) //释放url
+            document.body.removeChild(link) //释放标签
+          }
+        }).catch(reason => {
+          Message.error(reason)
+        })
     },
     importError(err, file, fileList){
       Message.error(err)
