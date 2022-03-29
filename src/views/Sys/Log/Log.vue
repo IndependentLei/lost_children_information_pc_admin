@@ -19,7 +19,7 @@
       :key="1"
       ref="multipleTable"
       :data="tableData"
-      :default-sort = "{prop: 'createTime'}"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       :header-cell-style="{'text-align':'center'}"
       border
       tooltip-effect="dark"
@@ -69,6 +69,11 @@
         label="日期"
         width="120"
         show-overflow-tooltip>
+        <template #default="{row}">
+          <span v-if="row.createTime">
+            {{row.createTime | dateFormat}}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column
         sortable
@@ -119,10 +124,11 @@ export default {
   },
   methods:{
     handleSizeChange(val) {
-      this.page.pageSize = val
-      this.pageUtils(1,val)
+      this.loading = true
+      this.pageUtils(this.page.currentPage,val)
     },
     handleCurrentChange(val) {
+      this.loading = true
       this.pageUtils(val,this.page.pageSize)
     },
     delLog(index,row){
@@ -175,16 +181,17 @@ export default {
       })
     },
     onSubmit() {
-      this.pageUtils(1,this.page.size)
+      this.loading = true
+      this.pageUtils(1,this.page.pageSize)
     },
     pageUtils(startPage, pageSize) {
+      this.loading = true
       let log = {
         userCode : this.listSelect.userCode,
-        pageSize : this.page.pageSize,
-        startPage : this.page.currentPage
+        pageSize : pageSize,
+        startPage : startPage
       }
       getLog(log).then(res=>{
-        console.log(res.data)
         this.loading = false
         this.tableData = res.data.data.list
         this.page.currentPage = res.data.data.current

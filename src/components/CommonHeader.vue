@@ -166,6 +166,7 @@ export default {
     logOut(){
       logout().then(res=>{
         removeCookie("Authentication")
+        localStorage.removeItem("userCode")
         this.openMessage('退出成功','success')
         this.$router.push({name:'login'})
       })

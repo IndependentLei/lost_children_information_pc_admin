@@ -29,8 +29,9 @@
 <script>
 
 import {setCookie} from "../../utils/cookie";
-import {login} from '../../api/Login/login'
+import {login,getUserByUserCode} from '../../api/Login/login'
 import {Message} from 'element-ui'
+import {mapState,mapMutations,mapActions} from 'vuex'
 export default {
   name:'login',
   data() {
@@ -52,9 +53,6 @@ export default {
       }
     }
   },
-  computed:{
-
-  },
   methods: {
     submitForm(form) {
       this.$refs[form].validate((valid) => {
@@ -64,6 +62,12 @@ export default {
             console.log(res.data)
             if (res.data.code === 200){
               setCookie("Authentication",res.data.Authentication,1)
+
+              getUserByUserCode(this.form.username).then(res=>{
+                let stringData = JSON.stringify(res.data.data)
+                this.$store.commit('user/SETUSERINFO',res.data.data)
+                localStorage.setItem("userCode",stringData)
+              })
               this.$router.push({name:'home'})
             }else {
               Message.error(res.data.msg)

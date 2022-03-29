@@ -6,15 +6,11 @@ export default {
 
   },
   mutations:{
-
+    SETUSERINFO(state,val){
+      state.userInfo = val
+    }
   },
   state:{
-    userInfo:{
-      name:"admin",
-      role:'超级管理员',
-      avatarImg:'https://file.7b114.xyz/blog_avater/2021/11/17/jdl.jpg',
-      loginTime:"2021-1-15",
-      loginLocation:"淮安"
-    },
+    userInfo:{},
   }
 }

@@ -6,13 +6,13 @@
         <div class="user">
           <img :src="userInfo.avatarImg">
           <div class="userinfo">
-            <p class="name">{{userInfo.name}}</p>
-            <p class="access">{{userInfo.role}}</p>
+            <p class="name">{{userInfo.userCode}}</p>
+            <p class="access">管理员</p>
           </div>
         </div>
         <div class="login-info">
-          <p>上次登录时间: <span>{{userInfo.loginTime}}</span></p>
-          <p>上次登录地点: <span>{{userInfo.loginLocation}}</span></p>
+          <p>上次登录时间: <span>{{userInfo.createTime | dateFormat}}</span></p>
+          <p>上次登录地点: <span>淮安</span></p>
         </div>
       </el-card>
 
@@ -20,16 +20,32 @@
       <el-card shadow="hover" style="margin-top: 20px">
         <h3 style="text-align: center;color: lightslategray;margin-top: 0">光荣的志愿者</h3>
         <el-table
+          v-loading="loading"
+          :align="{'text-align':'center'}"
+          :cell-style="{'text-align':'center'}"
+          :header-cell-style="{'text-align':'center'}"
+          :default-sort = "{prop: 'createTime', order: 'descending'}"
           :data="tableData"
           stripe
           border
           height="250"
           style="width: 100%">
           <el-table-column
-            show-overflow-tooltip
-            :prop="item.name"
-            :label="item.label"
-            v-for="item in tableLabel" :key="item.id">
+            sortable
+            prop="userCode"
+            label="用户名"
+            show-overflow-tooltip>
+          </el-table-column>
+          <el-table-column
+            sortable
+            prop="createTime"
+            label="加入时间"
+            show-overflow-tooltip>
+            <template #default="{row}">
+          <span v-if="row.createTime">
+            {{row.createTime | dateFormat}}
+          </span>
+            </template>
           </el-table-column>
         </el-table>
       </el-card>
@@ -43,12 +59,10 @@
                  :body-style="{display: 'flex' ,padding : 0 }">
           <i class="icon"
              :class="`el-icon-${item.icon}`"
-             :style="{background: item.color}"
-          >
+             :style="{background: item.color}">
           </i>
-          <div class="detail">
-            <p class="num">{{item.value}}</p>
-            <p class="txt">{{item.name}}:</p>
+          <div style="margin: auto">
+            <span style="font-size: xx-large">{{item.value}}</span>
           </div>
 
         </el-card>
@@ -59,69 +73,13 @@
 
 <script>
 import {mapState} from 'vuex'
+import {getAllVolunteers} from '../../api/User/user'
 export default {
   name: "home",
   data() {
     return {
-      tableData: [
-          {
-            id: '1',
-            date: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄',
-            volunteerId: 123
-          },
-          {
-            id: '2',
-            date: '2016-05-04',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1517 弄',
-            volunteerId: 123
-          },
-          {
-            id: '3',
-            date: '2016-05-01',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1519 弄',
-            volunteerId: 123
-          },
-          {
-            id: '4',
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄',
-            volunteerId: 123
-          },
-          {
-            id: '4',
-            date: '2016-05-03',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1516 弄',
-            volunteerId: 123
-          }
-        ],
-      tableLabel:[
-        {
-          id:13546457856,
-          name:'name',
-          label:'姓名'
-        },
-        {
-          id:235445657856,
-          name:'volunteerId',
-          label:'志愿者号'
-        },
-        {
-          id:2525456457856,
-          name:'address',
-          label:'地址'
-        },
-        {
-          id:75352485,
-          name:'date',
-          label:'加入日期'
-        }
-      ],
+      loading:true,
+      tableData: [],
       cardInfo: [
         {
           id:1,
@@ -151,6 +109,12 @@ export default {
     ...mapState('user',['userInfo'])
   },
   mounted() {
+    this.$store.commit('user/SETUSERINFO',JSON.parse(localStorage.getItem("userCode")))
+    getAllVolunteers().then(res=>{
+      console.log(res)
+      this.tableData = res.data.data
+      this.loading = false
+    })
   }
 }
 </script>

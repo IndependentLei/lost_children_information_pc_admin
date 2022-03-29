@@ -93,3 +93,13 @@ export const exportUser = ()=>{
   })
 }
 
+/**
+ * 获取所有自愿者
+ * @returns {*}
+ */
+export const getAllVolunteers = ()=>{
+  return axios.request({
+    url: '/lostchildinfo/user/volunteers',
+    method:'get',
+  })
+}

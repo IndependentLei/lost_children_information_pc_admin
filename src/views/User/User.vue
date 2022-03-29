@@ -50,7 +50,7 @@
       :key="1"
       ref="multipleTable"
       :data="tableData"
-      :default-sort = "{prop: 'createTime'}"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       :header-cell-style="{'text-align':'center'}"
       border
       tooltip-effect="dark"
@@ -111,6 +111,7 @@
           <span v-if="row.roleType">
             <el-tag type="success" v-if="row.roleType === '1'">管理员</el-tag>
             <el-tag type="warning" v-if="row.roleType === '2'">用户</el-tag>
+            <el-tag type="warning" v-if="row.roleType === '3'">自愿者</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -119,6 +120,11 @@
         prop="createTime"
         label="创建时间"
         show-overflow-tooltip>
+        <template #default="{row}">
+          <span v-if="row.createTime">
+            {{row.createTime | dateFormat}}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
@@ -173,6 +179,7 @@
           <el-select v-model="dialog.form.roleType" placeholder="请选择用户角色" clearable style="margin-left: -95px">
             <el-option label="管理员" value="1"></el-option>
             <el-option label="用户" value="2"></el-option>
+            <el-option label="自愿者" value="3"></el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -402,6 +409,7 @@ export default {
       this.dialog.form = {}
     },
     onSubmit() {
+      this.loading = true
       this.pageUtils(1,this.page.size)
     },
     toggleSelection(rows) {
@@ -420,11 +428,13 @@ export default {
     },
     // 分页容量的改变
     handleSizeChange(val) {
+      this.loading = true
       this.page.size = val
       this.pageUtils(1,val)
     },
     // 当前页数的改变
     handleCurrentChange(val) {
+      this.loading = true
       this.page.currentPage =val
       this.pageUtils(val,this.page.size)
     },
@@ -437,8 +447,11 @@ export default {
         state: this.listSelect.state
       }
       getUser(user).then((res)=>{
+        console.log(res.data)
         this.loading = false;
         this.tableData = res.data.data.list
+        this.page.currentPage = res.data.data.current
+        this.page.size = res.data.data.size
         this.page.total = res.data.data.total
 
       })

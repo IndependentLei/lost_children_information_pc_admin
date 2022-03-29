@@ -180,9 +180,8 @@ export default {
     ...mapState('tags',['isCollapse','title','menuActive'])
   },
   mounted() {
-    this.$router.push({name:"home"})
-  }
 
+  }
 }
 </script>
 

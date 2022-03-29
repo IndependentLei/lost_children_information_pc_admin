@@ -36,7 +36,7 @@
       :key="1"
       ref="multipleTable"
       :data="tableData"
-      :default-sort = "{prop: 'date'}"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       :header-cell-style="{'text-align':'center'}"
       border
       tooltip-effect="dark"
@@ -51,10 +51,15 @@
         sortable
         prop="pic"
         label="图片"
+        width="200"
         show-overflow-tooltip>
         <template #default="{row}">
           <span v-if="row.pic">
-            <img :src="row.pic" alt="" width="50px" height="36px">
+            <el-image
+              style="width: 150px; height: 100px"
+              :src="row.pic"
+              :preview-src-list="picList">
+            </el-image>
           </span>
         </template>
       </el-table-column>
@@ -63,6 +68,11 @@
         prop="createTime"
         label="时间"
         show-overflow-tooltip>
+        <template #default="{row}">
+          <span v-if="row.createTime">
+            {{row.createTime | dateFormat}}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column
         sortable
@@ -219,7 +229,8 @@ export default {
       delIds:[],
       rowKey:324,
       exitId:null,
-      loading:true
+      loading:true,
+      picList:[]
     }
   },
   computed:{
@@ -290,6 +301,7 @@ export default {
      * 改变当前页
      */
     handleCurrentChange(val){
+      this.loading =true
       this.page.currentPage = val
       this.pageUtil()
     },
@@ -297,6 +309,7 @@ export default {
      * 页面容量改变
      */
     handleSizeChange(val){
+      this.loading = true
       this.page.size = val;
       this.pageUtil()
     },
@@ -304,6 +317,7 @@ export default {
      * 条件查找
      */
     onSubmit() {
+      this.loading = true
       this.pageUtil()
     },
     toggleSelection(rows) {
@@ -441,6 +455,11 @@ export default {
         this.page.size = res.data.data.size
         this.page.total = res.data.data.total
         this.tableData = res.data.data.list
+        if (this.tableData != null){
+          this.picList = this.tableData.map(item=>{
+            return item.pic
+          })
+        }
       })
     }
   },

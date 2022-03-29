@@ -20,7 +20,7 @@
       :key="1"
       ref="multipleTable"
       :data="tableData"
-      :default-sort = "{prop: 'createTime'}"
+      :default-sort = "{prop: 'createTime', order: 'descending'}"
       :header-cell-style="{'text-align':'center'}"
       border
       tooltip-effect="dark"
@@ -42,6 +42,11 @@
         prop="createTime"
         label="创建时间"
         width="250">
+        <template #default="{row}">
+          <span v-if="row.createTime">
+            {{row.createTime | dateFormat}}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column
         sortable
@@ -197,9 +202,11 @@ export default {
       this.dialog.form = {}
     },
     handleSizeChange(val) {
+      this.loading = true
       this.pageUtil(this.page.currentPage,val)
     },
     handleCurrentChange(val) {
+      this.loading = true
       this.pageUtil(val,this.page.pageSize)
     },
     delRoleInfo(index,row){
@@ -248,6 +255,7 @@ export default {
       })
     },
     onSubmit() {
+      this.loading = true
       this.pageUtil(this.page.currentPage,this.page.pageSize)
     },
     pageUtil(startPage,pageSize) {

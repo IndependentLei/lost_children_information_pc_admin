@@ -1,14 +1,16 @@
-import axios from "../../axios";
+import axios from "../axios";
 
 /**
  * 分页查找
  * @param query
  * @returns {*}
  */
-export const menuList = (query)=>{
+export const listByPage = (query)=>{
   return axios.request({
-    url: '/lostchildinfo/menu/list',
+    url: '/lostchildinfo/childrenInfo/list',
     method:'post',
     data:query
   })
 }
+
+
