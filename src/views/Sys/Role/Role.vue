@@ -2,6 +2,9 @@
   <div class="user">
     <el-form :inline="true"  class="demo-form-inline">
       <el-form-item label="">
+        <el-input v-model="listSelect.roleValue" placeholder="角色名" style="width: 200px" clearable></el-input>
+      </el-form-item>
+      <el-form-item label="">
         <el-input v-model="listSelect.createName" placeholder="创建人" style="width: 200px" clearable></el-input>
       </el-form-item>
       <el-form-item>
@@ -61,6 +64,11 @@
         label="更新时间"
         show-overflow-tooltip
         width="250">
+        <template #default="{row}">
+          <span v-if="row.updateTime">
+            {{row.updateTime | dateFormat}}
+          </span>
+        </template>
       </el-table-column>
       <el-table-column
         sortable
@@ -92,12 +100,12 @@
     </el-pagination>
     <el-dialog :title="dialog.title" :visible.sync="dialog.dialogFormVisible" width="30%"
                style="text-align: center" @close="cancelDialog('ruleForm')" >
-      <el-form :model="dialog.form" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <el-form :model="dialog.form"  :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
         <el-form-item label="角色名称" prop="roleValue">
-          <el-input type="text" v-model="dialog.form.roleValue" clearable autocomplete="off"></el-input>
+          <el-input  v-model="dialog.form.roleValue" autocomplete="off" clearable ></el-input>
         </el-form-item>
         <el-form-item label="权限的值" prop="roleName">
-          <el-input type="text" v-model="dialog.form.roleName" clearable autocomplete="off"></el-input>
+          <el-input v-model="dialog.form.roleName" autocomplete="off" clearable ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
@@ -135,6 +143,7 @@ export default {
 
       listSelect:{
         createName:'',
+        roleValue:''
       },
       tableData:[],
       multipleSelection:[],
@@ -144,7 +153,7 @@ export default {
         total:undefined
       },
       loading:true,
-      roleId:undefined
+      roleId:null
     }
   },
   methods:{
@@ -260,6 +269,7 @@ export default {
     },
     pageUtil(startPage,pageSize) {
       let role = {
+        roleValue:this.listSelect.roleValue,
         createName:this.listSelect.createName,
         startPage:startPage,
         pageSize:pageSize

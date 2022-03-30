@@ -78,3 +78,14 @@ export const exportRole = ()=>{
     responseType:'blob'
   })
 }
+
+/**
+ * 未删除的角色
+ * @returns {*}
+ */
+export const noDeleteRole = ()=>{
+  return axios.request({
+    url: '/lostchildinfo/role/noDeleteRole',
+    method:'get',
+  })
+}

@@ -79,7 +79,7 @@ export const changePwd = (query)=>{
 }
 
 /**
- * 导入用户
+ * 导出用户
  * @returns {AxiosPromise}
  */
 export const exportUser = ()=>{

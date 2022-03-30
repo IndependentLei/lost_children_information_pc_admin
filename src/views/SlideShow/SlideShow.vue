@@ -180,7 +180,6 @@ export default {
       callback()
     }
     var validateState = (rule, value, callback) => {
-      console.log(value)
       if (this.form.state === null || this.form.state ===''){
         callback(new Error("轮播图状态不能为空"))
       }

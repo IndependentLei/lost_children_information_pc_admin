@@ -8,6 +8,9 @@ export default {
   mutations:{
     SETUSERINFO(state,val){
       state.userInfo = val
+    },
+    CHANGEUSERAVATER(state,val){
+      state.userInfo.avatarImg = val
     }
   },
   state:{

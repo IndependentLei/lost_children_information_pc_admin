@@ -73,32 +73,33 @@
 
 <script>
 import {mapState} from 'vuex'
-import {getAllVolunteers} from '../../api/User/user'
+import {pageHomeInfo} from '../../api/HomePage/HomePage'
 export default {
   name: "home",
   data() {
     return {
+      userData:{},
       loading:true,
       tableData: [],
       cardInfo: [
         {
           id:1,
           icon:'user',
-          value:123,
+          value:0,
           color:'green',
           name:'total'
         },
         {
           id:2,
           icon:'success',
-          value:13,
+          value:0,
           color:'skyblue',
           name:'found'
         },
         {
           id:3,
           icon:'error',
-          value:13,
+          value:0,
           color:'red',
           name:'no-Information'
         }
@@ -109,11 +110,20 @@ export default {
     ...mapState('user',['userInfo'])
   },
   mounted() {
-    this.$store.commit('user/SETUSERINFO',JSON.parse(localStorage.getItem("userCode")))
-    getAllVolunteers().then(res=>{
-      console.log(res)
-      this.tableData = res.data.data
-      this.loading = false
+    this.$store.commit("user/SETUSERINFO",JSON.parse(localStorage.getItem("userCode")))
+    pageHomeInfo().then(res=>{
+      console.log(res.data)
+      if (res.data.code === 200) {
+        this.userData = res.data.data.user
+        this.$store.commit("user/SETUSERINFO",res.data.data.user)
+        localStorage.removeItem("userCode")
+        localStorage.setItem("userCode",JSON.stringify(this.userData))
+        this.tableData = res.data.data.volunteers
+        this.cardInfo[0].value = res.data.data.cards[0]
+        this.cardInfo[1].value = res.data.data.cards[1]
+        this.cardInfo[2].value = res.data.data.cards[2]
+        this.loading = false
+      }
     })
   }
 }

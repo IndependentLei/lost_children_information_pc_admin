@@ -108,21 +108,37 @@ export default {
             ]
           },
           {
-            id: '7',
-            path:'/comment',
-            name:'comment',
+            id: '8',
             label: '评论管理',
             icon: 'chat-dot-round',
-            url: 'Comment/Comment'
+            url: 'Comment/Comment',
+            children: [
+              {
+                id:'9',
+                path:'/father/comment',
+                name:'fatherComment',
+                label:'父评论管理',
+                icon:'chat-dot-round',
+                url:'Comment/FatherComment'
+              },
+              {
+                id:'10',
+                path:'/son/comment',
+                name:'sonComment',
+                label:'子评论管理',
+                icon:'chat-dot-round',
+                url:'Comment/SonComment'
+              },
+            ]
           },
           {
-            id:'8',
+            id:'11',
             label:'系统设置',
             icon:'location',
             url:'location',
             children: [
               {
-                id:'9',
+                id:'12',
                 path:'/sys/log',
                 name:'log',
                 label:'系统日志',
@@ -130,7 +146,7 @@ export default {
                 url:'Sys/Log/Log'
               },
               {
-                id:'10',
+                id:'13',
                 path:'/sys/menu',
                 name:'menu',
                 label:'菜单详情',
@@ -138,7 +154,7 @@ export default {
                 url:'Sys/Menu/Menu'
               },
               {
-                id:'11',
+                id:'14',
                 path:'/sys/role',
                 name:'role',
                 label:'系统角色',

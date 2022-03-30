@@ -5,12 +5,12 @@
         <el-input v-model="listSelect.userCode" placeholder="用户名" style="width: 200px" clearable></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-select v-model="listSelect.role" clearable placeholder="角色" style="width: 150px">
+        <el-select v-model="listSelect.role" clearable placeholder="角色"  style="width: 150px">
           <el-option
             v-for="item in roleOptions"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value">
+            :key="item.roleType"
+            :label="item.roleValue"
+            :value="item.roleType" >
           </el-option>
         </el-select>
       </el-form-item>
@@ -109,9 +109,10 @@
         width="120">
         <template #default="{row}">
           <span v-if="row.roleType">
-            <el-tag type="success" v-if="row.roleType === '1'">管理员</el-tag>
-            <el-tag type="warning" v-if="row.roleType === '2'">用户</el-tag>
-            <el-tag type="warning" v-if="row.roleType === '3'">自愿者</el-tag>
+            <el-tag :type="row.roleType === '1' ? 'primary' : row.roleType === '2' ? 'success' : row.roleType === '3' ? 'warning':'danger'"
+                    v-for="role in roleOptions"
+                    v-if="row.roleType === role.roleType">{{role.roleValue}}
+            </el-tag>
           </span>
         </template>
       </el-table-column>
@@ -129,13 +130,13 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
-            size="mini" @click="editUserInfo(scope.$index, scope.row)">编辑</el-button>
+            size="mini" @click="editUserInfo(scope.$index, scope.row)" v-show="scope.row.userCode !== 'admin'">编辑</el-button>
           <el-button
             size="mini"
             type="primary" @click="resetPwd(scope.$index, scope.row)">重置密码</el-button>
           <el-button
             size="mini"
-            type="danger" @click="delUserInfo(scope.$index, scope.row)">删除</el-button>
+            type="danger" @click="delUserInfo(scope.$index, scope.row)" v-show="scope.row.userCode !== 'admin'">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -156,7 +157,7 @@
           <el-input v-model="dialog.form.userCode" placeholder="账号" autocomplete="off" clearable style="width:70%;margin-left: -92px" ></el-input>
         </el-form-item>
         <el-form-item label="密码"  prop="userPwd" v-show="dialog.checked">
-          <el-input v-model="dialog.form.userPwd" placeholder="密码" autocomplete="off" clearable  style="width:70%;margin-left: -92px"></el-input>
+          <el-input v-model="dialog.form.userPwd" type="password" placeholder="密码" autocomplete="off" clearable  style="width:70%;margin-left: -92px"></el-input>
         </el-form-item>
         <el-form-item label="性别"  prop="sex">
           <el-select v-model="dialog.form.sex" placeholder="请选择用户性别" clearable style="margin-left: -95px">
@@ -177,9 +178,12 @@
         </el-form-item>
         <el-form-item label="角色"  prop="roleType">
           <el-select v-model="dialog.form.roleType" placeholder="请选择用户角色" clearable style="margin-left: -95px">
-            <el-option label="管理员" value="1"></el-option>
-            <el-option label="用户" value="2"></el-option>
-            <el-option label="自愿者" value="3"></el-option>
+            <el-option
+              v-for="item in roleOptions"
+              :key="item.roleType"
+              :label="item.roleValue"
+              :value="item.roleType" >
+            </el-option>
           </el-select>
         </el-form-item>
       </el-form>
@@ -196,14 +200,12 @@
 import {getUser,addUser,getUserById,exitUserInfo,delUserByIds,changePwd,exportUser} from '../../api/User/user'
 import {Message} from "element-ui"
 import {getCookie} from "../../utils/cookie";
+import {noDeleteRole} from "../../api/Sys/Role/Role";
 export default {
   name: "user",
   data() {
     return {
-      roleOptions:[
-        {"label":"管理员","value":"1"},
-        {"label":"用户","value":"2"},
-      ],
+      roleOptions:[],
       stateOptions:[
         {"label":"正常","value":"0"},
         {"label":"禁止发言","value":"1"},
@@ -460,6 +462,9 @@ export default {
 
   mounted() {
     this.pageUtils(1,5)
+    noDeleteRole().then(res=>{
+      this.roleOptions = res.data.data
+    })
   }
 }
 </script>

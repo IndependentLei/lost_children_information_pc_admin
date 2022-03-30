@@ -115,11 +115,20 @@ const router = new Router({
             isAuth: true
           }
         },
-        // 评论管理组件
+        // 父评论管理组件
         {
-          path:'/comment',
-          name:'comment',
-          component: () => import('@/views/Comment/Comment'),
+          path:'/father/comment',
+          name:'fatherComment',
+          component: () => import('@/views/Comment/FatherComment'),
+          meta:{
+            isAuth: true
+          }
+        },
+        // 子评论管理组件
+        {
+          path:'/son/comment',
+          name:'sonComment',
+          component: () => import('@/views/Comment/SonComment'),
           meta:{
             isAuth: true
           }
