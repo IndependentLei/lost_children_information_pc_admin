@@ -16,6 +16,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
           :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
@@ -25,7 +26,7 @@
     </el-form>
     <el-row style="margin-bottom: 10px">
       <el-button type="success" :disabled="!multipleSelection.length" @click="batchDel">批量删除</el-button>
-      <el-button type="warning" @click="exportFatherComment">导出</el-button>
+      <el-button type="warning" @click="exportSonComment">导出</el-button>
     </el-row>
     <el-table
       v-loading="loading"
@@ -91,7 +92,7 @@
 <script>
 import {listByPage,delFatherComment,exportFatherComment} from '../../api/Comment/FatherComment'
 import {Message} from "element-ui";
-import {exportUser} from "../../api/User/user";
+import {delSonComment, exportSonComment} from "../../api/Comment/SonComment";
 export default {
   name: "FatherComment",
   data(){
@@ -139,21 +140,34 @@ export default {
     }
   },
   methods:{
-    handleSizeChange(){
-
+    handleSizeChange(val){
+      this.loading = true
+      this.pageUtil(this.page.currentPage,val)
     },
     handleCurrentChange(val){
-
+      this.loading = true
+      this.pageUtil(val,this.page.size)
     },
     onSubmit(){
       this.loading = true
       this.pageUtil(1,this.page.size)
     },
     batchDel(){
-
+      if(!confirm("确定要删除该评论吗?"))
+        return
+      delSonComment(this.multipleSelection).then(res=>{
+        if(res.data.code === 200){
+          Message.success(res.data.msg)
+          this.loading = true
+          this.pageUtil(this.page.currentPage,this.page.size)
+        }else {
+          console.log(res)
+          Message.error(res.data.msg)
+        }
+      })
     },
-    exportFatherComment(){
-      exportFatherComment().then(res=> {
+    exportSonComment(){
+      exportSonComment().then(res=> {
         const blob = new Blob([res.data], { type: 'application/vnd.ms-excel' })
         //IE10以上支持blob但是依然不支持download
         if ('download' in document.createElement('a')) {
@@ -170,8 +184,10 @@ export default {
         Message.error(reason)
       })
     },
-    handleSelectionChange(){
-
+    handleSelectionChange(val){
+      this.multipleSelection = val.map(item=>{
+        return item.id
+      })
     },
     delFatherComment(index,row){
       if(!confirm("确定要删除该评论吗?"))

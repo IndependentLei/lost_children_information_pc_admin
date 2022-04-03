@@ -105,7 +105,7 @@
           <el-input  v-model="dialog.form.roleValue" autocomplete="off" clearable ></el-input>
         </el-form-item>
         <el-form-item label="权限的值" prop="roleName">
-          <el-input v-model="dialog.form.roleName" autocomplete="off" clearable ></el-input>
+          <el-input v-model="dialog.form.roleName" autocomplete="off" clearable :disabled="dialog.title === '编辑角色'" ></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer" style="text-align: center">
@@ -150,7 +150,7 @@ export default {
       page:{
         currentPage:1,
         pageSize:5,
-        total:undefined
+        total:''
       },
       loading:true,
       roleId:null

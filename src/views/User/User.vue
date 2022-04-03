@@ -108,12 +108,11 @@
         show-overflow-tooltip
         width="120">
         <template #default="{row}">
-          <span v-if="row.roleType">
-            <el-tag :type="row.roleType === '1' ? 'primary' : row.roleType === '2' ? 'success' : row.roleType === '3' ? 'warning':'danger'"
-                    v-for="role in roleOptions"
-                    v-if="row.roleType === role.roleType">{{role.roleValue}}
+            <el-tag :type="row.roleType === '1' ? 'primary' : row.roleType === '2' ? 'success' : row.roleType === '3' ? 'warning':'danger'">
+              <span v-if="row.roleType === role.roleType" v-for="role in roleOptions" :key="role.roleId">
+                {{role.roleValue}}
+              </span>
             </el-tag>
-          </span>
         </template>
       </el-table-column>
       <el-table-column

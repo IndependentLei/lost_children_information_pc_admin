@@ -5,10 +5,10 @@
         <el-input v-model="listSelect.userCode" placeholder="评论人" style="width: 200px" clearable></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-input v-model="listSelect.replyCode" placeholder="评论人" style="width: 200px" clearable></el-input>
+        <el-input v-model="listSelect.replayCode" placeholder="被回复人" style="width: 200px" clearable></el-input>
       </el-form-item>
       <el-form-item label="">
-        <el-input v-model="listSelect.replyContent" placeholder="回复内容" style="width: 300px" clearable></el-input>
+        <el-input v-model="listSelect.replayContext" placeholder="回复内容" style="width: 300px" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-date-picker
@@ -19,6 +19,7 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
+          value-format="yyyy-MM-dd HH:mm:ss"
           :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
@@ -66,8 +67,14 @@
       </el-table-column>
       <el-table-column
         sortable
-        prop="commentContent"
-        label="内容"
+        prop="replayContext"
+        label="回复内容"
+        show-overflow-tooltip>
+      </el-table-column>
+      <el-table-column
+        sortable
+        prop="replayCode"
+        label="被回复人"
         show-overflow-tooltip>
       </el-table-column>
       <el-table-column label="操作">
@@ -129,8 +136,8 @@ export default {
       timeSelect:[],
       listSelect:{
         userCode:'',
-        replyContent:'',
-        replyCode:''
+        replayContext:'',
+        replayCode:''
       },
       multipleSelection:[],
       tableData:[],
@@ -143,18 +150,30 @@ export default {
     }
   },
   methods:{
-    handleSizeChange(){
-
+    handleSizeChange(val){
+      this.loading = true
+      this.pageUtil(this.page.currentPage,val)
     },
     handleCurrentChange(val){
-
+      this.loading = true
+      this.pageUtil(val,this.page.size)
     },
     onSubmit(){
       this.loading = true
       this.pageUtil(1,this.page.size)
     },
     batchDel(){
-
+      if(!confirm("确定要删除该评论吗?"))
+        return
+      delSonComment(this.multipleSelection).then(res=>{
+        if(res.data.code === 200){
+          Message.success(res.data.msg)
+          this.loading = true
+          this.pageUtil(this.page.currentPage,this.page.size)
+        }else {
+          Message.error(res.data.msg)
+        }
+      })
     },
     exportFatherComment(){
       exportSonComment().then(res=> {
@@ -174,8 +193,10 @@ export default {
         Message.error(reason)
       })
     },
-    handleSelectionChange(){
-
+    handleSelectionChange(val){
+      this.multipleSelection = val.map(item =>{
+        return item.id
+      })
     },
     delSonComment(index,row){
       if(!confirm("确定要删除该评论吗?"))
@@ -195,7 +216,7 @@ export default {
         startPage : startPage,
         pageSize : pageSize,
         userCode : this.listSelect.userCode,
-        replyContent: this.listSelect.replyContent,
+        replyContent: this.listSelect.replayContext,
         replyCode : this.listSelect.replyCode,
         startTime : this.timeSelect === null ? '' : this.timeSelect[0],
         endTime : this.timeSelect === null ? '' : this.timeSelect[1]
@@ -203,6 +224,7 @@ export default {
       listByPage(query).then(res=>{
 
         if(res.data.code === 200){
+          console.log(res.data)
           this.tableData = res.data.data.list
           this.page.currentPage = res.data.data.current
           this.page.size = res.data.data.size
