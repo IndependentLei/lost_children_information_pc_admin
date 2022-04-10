@@ -31,7 +31,7 @@
 import {setCookie} from "../../utils/cookie";
 import {login,getUserByUserCode} from '../../api/Login/login'
 import {Message} from 'element-ui'
-import {mapState,mapMutations,mapActions} from 'vuex'
+
 export default {
   name:'login',
   data() {

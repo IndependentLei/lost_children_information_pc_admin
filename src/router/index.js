@@ -2,7 +2,6 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import MainPage from '../views/MainPage'
 import Login from "../views/Login/Login";
-import store from "../store/index"
 import {Message} from 'element-ui'
 import {getCookie} from "../utils/cookie";
 

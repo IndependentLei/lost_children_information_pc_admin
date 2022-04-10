@@ -83,7 +83,7 @@ export default {
     }
   },
   methods:{
-    delChildrenInfoAttach(){
+    delChildrenInfoAttach(index,row){
 
     },
     handleSelectionChange(){

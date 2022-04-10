@@ -1,5 +1,4 @@
 // tags组件的数据共享
-import fa from "element-ui/src/locale/lang/fa";
 
 export default {
   namespaced:true, // 开启命名空间

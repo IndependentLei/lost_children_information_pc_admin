@@ -169,7 +169,7 @@
         <template #default="{row}">
           <span v-if="row.find">
             <el-tag  v-if="row.find === '0'">未找到</el-tag>
-            <el-tag type="success" v-if="row.sex === '1'">已找到</el-tag>
+            <el-tag type="success" v-else >已找到</el-tag>
           </span>
         </template>
       </el-table-column>
@@ -202,7 +202,7 @@
       :page-size = page.size
       layout="total, sizes, prev, pager, next, jumper"
       :total= page.total
-      style="margin-top: 33px">
+      style="margin-top: 15px">
     </el-pagination>
   </div>
 </template>
@@ -274,10 +274,10 @@ export default {
   },
   methods:{
     handleSizeChange(val){
-
+      this.pageUtil(this.page.currentPage,val)
     },
     handleCurrentChange(val){
-
+      this.pageUtil(val,this.page.size)
     },
     editChildrenInfo(index,row){
 
@@ -292,7 +292,7 @@ export default {
     },
     onSubmit(){
       this.loading = true
-      this.pageUtil(this.page.currentPage,this.page.size)
+      this.pageUtil(1,this.page.size)
 
     },
     batchDel(){
