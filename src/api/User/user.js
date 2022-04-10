@@ -103,3 +103,15 @@ export const getAllVolunteers = ()=>{
     method:'get',
   })
 }
+
+/**
+ * 根据用户id获取用户角色
+ * @param query
+ * @returns {*}
+ */
+export const getRoleTypeByUserId = (query)=>{
+  return axios.request({
+    url: '/lostchildinfo/userrole/'+query,
+    method:'get',
+  })
+}
