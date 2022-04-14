@@ -8,6 +8,7 @@ import axios from "../axios";
 export const pageHomeInfo = (query)=>{
   return axios.request({
     url: '/lostchildinfo/homePage/backInfo',
-    method:'Get',
+    method:'post',
+    data:query
   })
 }

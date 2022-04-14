@@ -61,24 +61,25 @@ export default {
           this.loading = true
           login(this.form.username,this.form.password).then((res)=>{
             if (res.data.code === 200){
-              setCookie("Authentication",res.data.Authentication,1)
+              setCookie("adminAuthentication",res.data.Authentication,1)
               getUserByUserCode(this.form.username).then(res=>{
                 let stringData = JSON.stringify(res.data.data)
                 this.$store.commit('user/SETUSERINFO',res.data.data)
-                localStorage.setItem("userCode",stringData)
+                localStorage.setItem("adminUserInfo",stringData)
                 getRoleTypeByUserId(res.data.data.userId).then(res=>{
-                  console.log(res.data)
                   // 只有管理员才可以登录
                   if (res.data.data.roleType === '1'){
                     this.loading = false
                     this.$router.push({name:'home'})
                   }else{
                     this.$message.error("没有权限,请联系管理员")
+                    this.loading = false
                   }
                 })
               })
             }else {
               Message.error(res.data.msg)
+              this.loading = false
             }
           })
         }

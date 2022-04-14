@@ -58,7 +58,7 @@
 
 <script>
 import {mapState,mapMutations} from 'vuex'
-import {removeCookie} from "../utils/cookie";
+import {getCookie, removeCookie} from "../utils/cookie";
 import {logout} from "../api/Login/logout";
 import {changePwd} from "../api/User/user";
 
@@ -165,8 +165,9 @@ export default {
      */
     logOut(){
       logout().then(res=>{
-        removeCookie("Authentication")
-        localStorage.removeItem("userCode")
+        removeCookie("adminAuthentication")
+        removeCookie("username")
+        localStorage.removeItem("adminUserInfo")
         this.openMessage('退出成功','success')
         this.$router.push({name:'login'})
       })
@@ -228,7 +229,6 @@ header{
 .left-container{
   display: flex;
   align-items: center;
-
 }
 .el-button {
   margin-right: 20px;

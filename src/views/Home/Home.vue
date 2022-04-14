@@ -61,8 +61,16 @@
              :class="`el-icon-${item.icon}`"
              :style="{background: item.color}">
           </i>
-          <div style="margin: auto">
-            <span style="font-size: xx-large">{{item.value}}</span>
+          <div style="margin: auto;">
+            <div style="text-align: center">
+              <span style="font-size: xx-large;">{{item.value}}</span>
+            </div>
+
+            <br>
+            <div style="text-align: center">
+              <span style="font-size: small">{{item.describe}}</span>
+            </div>
+
           </div>
 
         </el-card>
@@ -110,18 +118,24 @@ export default {
     ...mapState('user',['userInfo'])
   },
   mounted() {
-    this.$store.commit("user/SETUSERINFO",JSON.parse(localStorage.getItem("userCode")))
-    pageHomeInfo().then(res=>{
+    this.$store.commit("user/SETUSERINFO",JSON.parse(localStorage.getItem("adminUserInfo")))
+    let query = {
+      userId:this.userInfo.userId
+    }
+    pageHomeInfo(query).then(res=>{
       console.log(res.data)
       if (res.data.code === 200) {
         this.userData = res.data.data.user
         this.$store.commit("user/SETUSERINFO",res.data.data.user)
-        localStorage.removeItem("userCode")
-        localStorage.setItem("userCode",JSON.stringify(this.userData))
+        localStorage.removeItem("adminUserInfo")
+        localStorage.setItem("adminUserInfo",JSON.stringify(this.userData))
         this.tableData = res.data.data.volunteers
         this.cardInfo[0].value = res.data.data.cards[0]
         this.cardInfo[1].value = res.data.data.cards[1]
         this.cardInfo[2].value = res.data.data.cards[2]
+        this.cardInfo[0].describe = '丢失总数'
+        this.cardInfo[1].describe = '已找到'
+        this.cardInfo[2].describe = '未找到'
         this.loading = false
       }
     })
