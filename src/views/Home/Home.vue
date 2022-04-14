@@ -75,17 +75,23 @@
 
         </el-card>
       </div>
+      <div class="echarts" id="main"></div>
     </el-col>
   </el-row>
 </template>
 
 <script>
+const echarts = require('echarts')
 import {mapState} from 'vuex'
 import {pageHomeInfo} from '../../api/HomePage/HomePage'
 export default {
   name: "home",
   data() {
     return {
+      echartsList:{
+        threeDate:[],
+        threeSum:[],
+      },
       userData:{},
       loading:true,
       tableData: [],
@@ -114,6 +120,54 @@ export default {
       ]
     }
   },
+  methods:{
+
+    init(){
+      var myChart = echarts.init(document.getElementById('main'))
+
+      // 指定图表的配置项和数据
+      var option = {
+        title: {
+          text: '新增儿童信息'
+        },
+        tooltip: {},
+        xAxis: {
+          data: this.echartsList.threeDate,
+          axisLabel: {
+            color: '#000000',
+            interval: 0, // 控制是否全部显示
+            // rotate: 40// 控制字体倾斜
+          }
+        },
+        yAxis:{
+          axisLabel: {
+            interval: 0, // 控制是否全部显示
+          },
+        },
+        legend: {
+          data: ['人数']
+        },
+        series: [
+          {
+            name: '人数',
+            type: 'bar',
+            data: this.echartsList.threeSum,
+            label: {
+              show: true,
+              position: 'top',
+              textStyle: {
+                fontSize: 10
+              }
+            }
+          }
+        ]
+      }
+
+
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option)
+    }
+  },
   computed:{
     ...mapState('user',['userInfo'])
   },
@@ -125,6 +179,7 @@ export default {
     pageHomeInfo(query).then(res=>{
       console.log(res.data)
       if (res.data.code === 200) {
+        this.echartsList = res.data.data.echartsList
         this.userData = res.data.data.user
         this.$store.commit("user/SETUSERINFO",res.data.data.user)
         localStorage.removeItem("adminUserInfo")
@@ -139,6 +194,11 @@ export default {
         this.loading = false
       }
     })
+    const that = this
+    console.log(this) // 当前About组件
+    setTimeout(function () { // 这里定时器是因为，绘图太快，数据跟不上，等2s后在绘图！！
+      that.init()
+    }, 2000)
   }
 }
 </script>
@@ -217,5 +277,11 @@ export default {
 }
 .graph .el-card {
   width: 48%;
+}
+.echarts{
+  display: inline-block;
+  padding: 80px;
+  width: 80%;
+  height: 520px;
 }
 </style>
