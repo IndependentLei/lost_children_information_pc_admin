@@ -280,7 +280,8 @@ export default {
 }
 .echarts{
   display: inline-block;
-  padding: 80px;
+  padding: 40px;
+  margin-left: 40px;
   width: 80%;
   height: 520px;
 }

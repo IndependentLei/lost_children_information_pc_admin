@@ -159,11 +159,16 @@ export default {
   methods:{
     exitRoleInfo(index,row){
       getRoleById(row.roleId).then(res=>{
-        this.roleId = row.roleId
-        this.dialog.title = '编辑角色'
-        this.dialog.form.roleValue = res.data.data.roleValue
-        this.dialog.form.roleName = res.data.data.roleName
-        this.dialog.dialogFormVisible = true
+        if (res.data.code === 200){
+          this.dialog.form = res.data.data
+
+          this.roleId = row.roleId
+          this.dialog.title = '编辑角色'
+          this.dialog.dialogFormVisible = true
+
+        }else{
+          this.$message.error("获取数据失败")
+        }
       })
     },
     exitForm(formName){

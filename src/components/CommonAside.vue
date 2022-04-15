@@ -163,6 +163,15 @@ export default {
               }
             ]
           }
+          ,
+          {
+            id:'15',
+            path:'/article',
+            name:'article',
+            label:'文章管理',
+            icon:'folder-opened',
+            url:'/Article/Article'
+          }
         ]
       };
     },

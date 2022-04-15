@@ -168,8 +168,8 @@
         width="200">
         <template #default="{row}">
           <span v-if="row.find">
-            <el-tag  v-if="row.find === '0'">未找到</el-tag>
-            <el-tag type="success" v-else >已找到</el-tag>
+            <el-button size="mini" type="danger" @click="findChild(row)"  v-if="row.find === '0'">未找到</el-button>
+            <el-button size="mini" type="success" @click="findChild(row)"  v-else >已找到</el-button>
           </span>
         </template>
       </el-table-column>
@@ -208,7 +208,7 @@
 </template>
 
 <script>
-import {listByPage} from "../../api/Children/ChildrenInfo"
+import {listByPage,delChildInfo,updateChildInfo} from "../../api/Children/ChildrenInfo"
 export default {
   name: "Children",
   data(){
@@ -273,6 +273,20 @@ export default {
     }
   },
   methods:{
+    findChild(row){
+      console.log(row)
+      let query = {
+        childrenId: row.childrenId,
+        find : row.find === '0' ? '1' : '0'
+      }
+      updateChildInfo(query).then(res=>{
+        if (res.data.code === 200){
+          this.onSubmit()
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
+    },
     handleSizeChange(val){
       this.pageUtil(this.page.currentPage,val)
     },
@@ -283,7 +297,17 @@ export default {
 
     },
     delChildrenInfo(index,row){
-
+      if (!confirm("确定删除?")){
+        return 0
+      }
+      delChildInfo(row.childrenId).then(res=>{
+        if (res.data.code === 200){
+          this.$message.success(res.data.msg)
+          this.pageUtil(this.page.currentPage,this.page.size)
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
     },
     handleSelectionChange(val){
       this.multipleSelection = val.map(item=>{
@@ -291,18 +315,26 @@ export default {
       })
     },
     onSubmit(){
-      this.loading = true
       this.pageUtil(1,this.page.size)
-
     },
     batchDel(){
-
+      if (!confirm("确定删除?")){
+        return 0
+      }
+      delChildInfo(this.multipleSelection).then(res=>{
+        if (res.data.code === 200){
+          this.$message.success(res.data.msg)
+          this.pageUtil(this.page.currentPage,this.page.size)
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
     },
     exportChildrenInfo(){
 
     },
     pageUtil(startPage,pageSize){
-      console.log("---->"+this.timeSelect)
+      this.loading = true
       let formData = this.listSelect
       let query = {
         startPage:startPage,
@@ -320,7 +352,6 @@ export default {
       }
 
       listByPage(query).then(res=>{
-        console.log(res.data)
         this.tableData = res.data.data.list
         this.page.currentPage = res.data.data.current
         this.page.size = res.data.data.size

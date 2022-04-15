@@ -131,6 +131,15 @@ const router = new Router({
           meta:{
             isAuth: true
           }
+        },
+        // 文章组件
+        {
+          path:'/article',
+          name:'article',
+          component: () => import('@/views/Article/Article'),
+          meta:{
+            isAuth: true
+          }
         }
 
       ]

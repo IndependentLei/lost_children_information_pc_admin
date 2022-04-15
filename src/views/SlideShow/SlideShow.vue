@@ -122,12 +122,12 @@
                append-to-body
                close-on-click-modal
                width="30%"
-               style="text-align: center" @close="cleanData('form')">
+               style="text-align: center" @close="cleanData('formRule')">
 
       <el-form :model="form"
                status-icon
                :rules="rules"
-               ref="form"
+               ref="formRule"
                label-width="100px"
                class="demo-ruleForm">
         <el-form-item label="轮播图" prop="pic">
@@ -155,9 +155,9 @@
           </el-select>
         </el-form-item>
         <el-form-item size="large">
-          <el-button v-show="flag === 1" type="primary" @click="addSlideShow('form')" >提交</el-button>
-          <el-button v-show="flag === 2" type="primary" @click="exitSlideShow('form')" >修改</el-button>
-          <el-button @click="resetForm('form')">重置</el-button>
+          <el-button v-show="flag === 1" type="primary" @click="addSlideShow('formRule')" >提交</el-button>
+          <el-button v-show="flag === 2" type="primary" @click="exitSlideShow('formRule')" >修改</el-button>
+          <el-button @click="resetForm('formRule')">重置</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -381,8 +381,8 @@ export default {
     /**
      * 添加
      */
-    addSlideShow(form){
-      this.$refs[form].validate((valid) => {
+    addSlideShow(formName){
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           let query = {
             pic:this.form.pic,
@@ -408,8 +408,8 @@ export default {
     /**
      * 修改信息
      */
-    exitSlideShow(form){
-      this.$refs[form].validate((valid) => {
+    exitSlideShow(formName){
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           let query = {
             id: this.exitId,
@@ -435,8 +435,8 @@ export default {
     /**
      * 重置表单
      */
-    resetForm(form){
-      this.$refs[form].resetFields();
+    resetForm(formName){
+      this.$refs[formName].resetFields();
     },
 
     /**
@@ -475,7 +475,8 @@ export default {
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  width: 220px;
+  width: 178px;
+  height: 178px;
 }
 .avatar-uploader :hover {
   border-color: #409EFF;

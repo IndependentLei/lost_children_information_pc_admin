@@ -8,11 +8,11 @@
         <el-button type="primary" @click="onSubmit">查询</el-button>
       </el-form-item>
     </el-form>
-    <el-row style="margin-bottom: 10px">
-      <el-button type="primary" @click="dialog.dialogFormVisible=true;dialog.title='添加菜单'">新增</el-button>
-      <el-button type="success" :disabled="!multipleSelection.length" @click="batchDel">批量删除</el-button>
-      <el-button type="warning" @click="exportMenu">导出</el-button>
-    </el-row>
+<!--    <el-row style="margin-bottom: 10px">-->
+<!--      <el-button type="primary" @click="dialog.dialogFormVisible=true;dialog.title='添加菜单'">新增</el-button>-->
+<!--      <el-button type="success" :disabled="!multipleSelection.length" @click="batchDel">批量删除</el-button>-->
+<!--      <el-button type="warning" @click="exportMenu">导出</el-button>-->
+<!--    </el-row>-->
     <el-table
       v-loading="loading"
       :align="{'text-align':'center'}"
@@ -75,14 +75,14 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="操作">
-        <template slot-scope="scope">
-          <el-button
-            size="mini" type="success" @click="editMenuInfo(scope.$index, scope.row)">编辑</el-button>
-          <el-button
-            size="mini" type="warning" @click="delMenu(scope.$index, scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="操作">-->
+<!--        <template slot-scope="scope">-->
+<!--          <el-button-->
+<!--            size="mini" type="success" @click="editMenuInfo(scope.$index, scope.row)">编辑</el-button>-->
+<!--          <el-button-->
+<!--            size="mini" type="warning" @click="delMenu(scope.$index, scope.row)">删除</el-button>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
     </el-table>
     <el-pagination
       style="margin-top: 20px"
@@ -172,9 +172,9 @@ export default {
           menuName:''
         }
       },
-      rules:[
+      rules:{
 
-      ],
+      }
       // oneLevelMenu:this.tableData.map(item => item.label)
     }
   },
