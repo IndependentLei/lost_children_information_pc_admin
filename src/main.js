@@ -8,7 +8,7 @@ import store from './store/index'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 
-//时间转换
+// 时间转换
 Vue.filter('dateFormat', function (originVal) {
   const dt = new Date(originVal)
   const y = dt.getFullYear()
@@ -19,6 +19,18 @@ Vue.filter('dateFormat', function (originVal) {
   const ss = (dt.getSeconds() + '').padStart(2, '0')
   return `${y}.${m}.${d} ${hh}:${mm}:${ss}`
 })
+
+//
+// Vue.filter('dateToDay', function (originVal) {
+//   const dt = new Date(originVal)
+//   const y = dt.getFullYear()
+//   const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+//   const d = (dt.getDate() + '').padStart(2, '0')
+//   const hh = '00'
+//   const mm = '00'
+//   const ss = '00'
+//   return `${y}.${m}.${d} ${hh}:${mm}:${ss}`
+// })
 
 Vue.config.productionTip = false
 

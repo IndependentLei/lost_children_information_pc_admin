@@ -231,6 +231,17 @@ export default {
     }
   },
   methods:{
+    dateToDay (originVal){
+      console.log(originVal)
+      const dt = new Date(originVal)
+      const y = dt.getFullYear()
+      const m = (dt.getMonth() + 1 + '').padStart(2, '0')
+      const d = (dt.getDate() + '').padStart(2, '0')
+      const hh = "00"
+      const mm = "00"
+      const ss = "00"
+      return `${y}.${m}.${d} ${hh}:${mm}:${ss}`
+    },
     beforeAvatarUpload(file){
       const isJPG = file.type === 'image/jpeg';
       const isLt2M = file.size / 1024 / 1024 < 2;
@@ -362,14 +373,17 @@ export default {
     },
     pageUtil(startPage,pageSize) {
       this.loading = true
+      console.log(11111111111)
+      console.log(this.timeSelect)
       let query = {
         title:this.listSelect.title,
         content:this.listSelect.content,
-        startTime:this.timeSelect === null ? '' : this.timeSelect[0],
-        endTime:this.timeSelect === null ? '' : this.timeSelect[1],
+        startTime:this.timeSelect.length === 0 ? '' : this.dateToDay(this.timeSelect[0]),
+        endTime:this.timeSelect.length === 0 ? '' : this.dateToDay(this.timeSelect[1]),
         startPage:startPage,
         pageSize:pageSize
       }
+
       getArticle(query).then(res=>{
         this.loading = false
         this.tableData = res.data.data.list

@@ -2,7 +2,7 @@
   <div class="childrenInfoAttach">
     <el-form :inline="true"  class="demo-form-inline">
       <el-form-item label="">
-        <el-input v-model="listSelect.userCode" placeholder="用户名" style="width: 200px" clearable></el-input>
+        <el-input v-model="listSelect.idCard" placeholder="身份证" style="width: 200px" clearable></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -68,15 +68,16 @@
 </template>
 
 <script>
-import {getAttachByChildrenId} from '../../api/Children/ChildrenInfoAttach'
+import {getAttachByChildrenId,getAttachByIdCard,delAttach} from '../../api/Children/ChildrenInfoAttach'
 export default {
   name: "ChildrenAttach",
   data(){
     return{
+      childrenId:null,
       picList:[],
       tableData:[],
       listSelect:{
-
+        idCard:''
       },
       multipleSelection:[],
       loading:true
@@ -84,33 +85,69 @@ export default {
   },
   methods:{
     delChildrenInfoAttach(index,row){
-
+      if(!confirm("确认删除吗?"))
+        return 0
+      delAttach(row.id).then(res=>{
+        if(res.data.code === 200){
+          this.$message.success(res.data.msg)
+          this.getAttachByChildrenId(this.childrenId)
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
     },
-    handleSelectionChange(){
-
+    handleSelectionChange(val){
+      this.multipleSelection = val.map(item=>{
+        return item.id
+      })
     },
     onSubmit(){
-
+      this.loading = true
+      getAttachByIdCard(this.listSelect.idCard).then(res=>{
+        if(res.data.code === 200){
+          this.childrenId = res.data.data.childrenInfoId
+          this.tableData = res.data.data
+          if (this.tableData != null){
+            this.picList = this.tableData.map(item =>{
+              return item.pic
+            })
+          }
+        }
+      }).finally(()=>{
+        this.loading = false
+      })
     },
     batchDel(){
-
+      if(!confirm("确认删除吗?"))
+        return 0
+      delAttach(this.multipleSelection).then(res=>{
+        if(res.data.code === 200){
+          this.$message.success(res.data.msg)
+          this.getAttachByChildrenId(this.childrenId)
+        }else{
+          this.$message.error(res.data.msg)
+        }
+      })
     },
     exportChildrenInfoAttach(){
 
     },
-  },
-  mounted() {
-    getAttachByChildrenId(this.$route.query.childrenId).then(res=>{
-
-      this.tableData = res.data.data
-      if (this.tableData != null){
+    getAttachByChildrenId(childrenId){
+      getAttachByChildrenId(childrenId).then(res=>{
+        this.tableData = res.data.data
+        if (this.tableData != null){
           this.picList = this.tableData.map(item =>{
             return item.pic
           })
-      }
-      this.loading = false
-    })
-
+        }
+      }).finally(()=>{
+        this.loading = false
+      })
+    }
+  },
+  mounted() {
+    this.childrenId = this.$route.query.childrenId
+    this.getAttachByChildrenId(this.$route.query.childrenId)
   }
 }
 </script>

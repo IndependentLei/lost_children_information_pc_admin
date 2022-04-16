@@ -11,3 +11,30 @@ export const getAttachByChildrenId = (query)=>{
     method:'get',
   })
 }
+
+/**
+ * 根据身份证查询所有附件
+ * @param query
+ * @returns {*}
+ */
+export const getAttachByIdCard = (query)=>{
+  return axios.request({
+    url: '/lostchildinfo/childrenInfoAttach/getAttachByChildIdCard/'+query,
+    method:'get',
+  })
+}
+
+
+/**
+ * 根据id删除附件
+ * @param query
+ * @returns {*}
+ */
+export const delAttach = (query)=>{
+  return axios.request({
+    url: '/lostchildinfo/childrenInfoAttach/'+query,
+    method:'delete',
+  })
+}
+
+
