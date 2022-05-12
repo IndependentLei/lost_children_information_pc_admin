@@ -186,7 +186,7 @@ export default {
           }
         }]
       },
-      timeSelect:[],
+      timeSelect:null,
       rules: {
         picUrl:[
           { required:true, validator: validateAttach, trigger: 'blur' },
@@ -373,13 +373,11 @@ export default {
     },
     pageUtil(startPage,pageSize) {
       this.loading = true
-      console.log(11111111111)
-      console.log(this.timeSelect)
       let query = {
         title:this.listSelect.title,
         content:this.listSelect.content,
-        startTime:this.timeSelect.length === 0 ? '' : this.dateToDay(this.timeSelect[0]),
-        endTime:this.timeSelect.length === 0 ? '' : this.dateToDay(this.timeSelect[1]),
+        startTime:this.timeSelect === null ? '' : this.dateToDay(this.timeSelect[0]),
+        endTime:this.timeSelect === null ? '' : this.dateToDay(this.timeSelect[1]),
         startPage:startPage,
         pageSize:pageSize
       }

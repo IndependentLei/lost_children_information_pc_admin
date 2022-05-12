@@ -357,6 +357,7 @@ export default {
       delSlideShow(row).then(res=>{
         if(res.data.code === 200){
           Message.success(res.data.msg)
+          this.pageUtil()
         }
 
         else Message.error(res.data.msg)

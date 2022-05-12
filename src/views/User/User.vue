@@ -132,7 +132,7 @@
             size="mini" @click="editUserInfo(scope.$index, scope.row)" v-show="scope.row.userCode !== 'admin'">编辑</el-button>
           <el-button
             size="mini"
-            type="primary" @click="resetPwd(scope.$index, scope.row)">重置密码</el-button>
+            type="primary" @click="resetPwd(scope.$index, scope.row)" v-show="scope.row.userCode !== 'admin'">重置密码</el-button>
           <el-button
             size="mini"
             type="danger" @click="delUserInfo(scope.$index, scope.row)" v-show="scope.row.userCode !== 'admin'">删除</el-button>
@@ -338,11 +338,21 @@ export default {
       if (!confirm("确定删除吗?")){
         return
       }
+      let user = this.multipleSelection.filter(user=>{
+        return user ===1
+      })
+      console.log(user)
+      if(user.length !== 0) {
+        this.$message.error("禁止删除超级管理员")
+        return;
+      }
       delUserByIds(this.multipleSelection).then(res=>{
         if (res.data.code === 200){
           this.pageUtils(this.page.currentPage,this.page.size)
+          this.multipleSelection = []
           Message.success("删除成功")
         }else{
+          this.multipleSelection = []
           Message.error("删除失败")
         }
       })

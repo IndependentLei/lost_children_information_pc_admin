@@ -263,7 +263,7 @@ export default {
         find:''
       },
       multipleSelection:[],
-      timeSelect:[],
+      timeSelect:null,
       page:{
         size:5,
         currentPage:1,
@@ -346,8 +346,8 @@ export default {
         age:formData.age,
         lostLocation:formData.lostLocation,
         childrenFeature:formData.childrenFeature,
-        startTime:this.timeSelect[0]===null?'':this.timeSelect[0],
-        endTime:this.timeSelect[1]===null?'':this.timeSelect[1],
+        startTime:this.timeSelect===null?'':this.timeSelect[0],
+        endTime:this.timeSelect===null?'':this.timeSelect[1],
         find:formData.find
       }
 

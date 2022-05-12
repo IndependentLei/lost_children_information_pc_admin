@@ -27,7 +27,7 @@ class HttpRequest{
     // 添加请求拦截器
     instance.interceptors.request.use(function (config) {
       // 请求头加入token
-      config.headers.Authentication = getCookie("Authentication")
+      config.headers.Authentication = getCookie("adminAuthentication")
       // 在发送请求之前做些什么
       console.log("拦截处理请求")
       return config;
